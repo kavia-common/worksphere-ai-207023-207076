@@ -1,9 +1,18 @@
 import type { ReactNode } from "react";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
 import MobileSidebar from "@/components/dashboard/MobileSidebar";
+import { AUTH_COOKIE_NAME, isAuthenticatedCookieValue } from "@/lib/auth";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
+  const cookieValue = cookies().get(AUTH_COOKIE_NAME)?.value;
+
+  if (!isAuthenticatedCookieValue(cookieValue)) {
+    redirect("/login");
+  }
+
   return (
     <div className="min-h-dvh">
       <MobileSidebar>
